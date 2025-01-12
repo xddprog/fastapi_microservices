@@ -9,4 +9,7 @@ async def lifespan(app: FastAPI):
     await broker.declare_queue(BrokerQueues.GATEWAY)
     app.state.broker = broker
     yield
-    await broker.close()
+    try:
+        await broker.close(BrokerQueues.GATEWAY)
+    finally:
+        await broker.close(BrokerQueues.GATEWAY)

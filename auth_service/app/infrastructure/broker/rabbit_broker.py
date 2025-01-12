@@ -27,7 +27,7 @@ class RabbitBroker:
                 reply_to=reply_to,
                 correlation_id=correlation_id,
             ), 
-            routing_key=queue_name,
+            routing_key=queue_name
         )
 
     async def __call__(self) -> Any:
@@ -44,6 +44,6 @@ class RabbitBroker:
             await message.ack()
 
     async def close(self, queue_name: str):
-        # await self.channel.queue_delete(queue_name)
+        await self.channel.queue_delete(queue_name)
         await self.connection.close()
         await self.channel.close()

@@ -5,6 +5,7 @@ class BrokerQueues(str, Enum):
     AUTH = "auth_queue"
     TASKS = "tasks_queue"
     USERS = "users_queue"
+    GATEWAY = "gateway_queue"
 
 
 class UserServiceRoutes(str, Enum):

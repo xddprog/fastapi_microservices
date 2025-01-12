@@ -37,12 +37,8 @@ class RabbitBroker:
         )
         self.channel = await self.connection.channel()
         return self
-    
-    async def on_response(self, message: aio_pika.IncomingMessage):
-        if message.correlation_id == self.correlation_id:
-            self.response = message.body.decode()
-            await message.ack()
 
-    async def close(self):
+    async def close(self, queue_name: str):
+        await self.channel.queue_delete(queue_name)
         await self.connection.close()
         await self.channel.close()

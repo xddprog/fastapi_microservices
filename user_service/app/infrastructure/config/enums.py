@@ -14,3 +14,7 @@ class UserServiceRoutes(str, Enum):
     GET = "get_user"
     UPDATE = "update_user"
     DELETE = "delete_user"
+
+
+class AuthServiceRoutes(str, Enum):
+    CREATE_ACCESS_TOKEN = "create_access_token"

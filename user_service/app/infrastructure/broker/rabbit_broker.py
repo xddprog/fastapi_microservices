@@ -1,8 +1,10 @@
+from itertools import chain
 from typing import Any
 import aio_pika
 from aio_pika.abc import AbstractQueue
 
 from infrastructure.config.config import rabbit_config
+from infrastructure.config.enums import BrokerQueues
 
 
 class RabbitBroker:
@@ -24,9 +26,9 @@ class RabbitBroker:
             aio_pika.Message(
                 body=message.encode("utf-8"),
                 reply_to=reply_to,
-                correlation_id=correlation_id
+                correlation_id=correlation_id,
             ), 
-            routing_key=queue_name,
+            routing_key=queue_name
         )
 
     async def __call__(self) -> Any:
@@ -42,6 +44,7 @@ class RabbitBroker:
             self.response = message.body.decode()
             await message.ack()
 
-    async def close(self):
+    async def close(self, queue_name: str):
+        await self.channel.queue_delete(queue_name)
         await self.connection.close()
         await self.channel.close()
