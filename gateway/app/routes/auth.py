@@ -1,17 +1,31 @@
 from typing import Annotated
 from fastapi import APIRouter, Depends, Response
 
-from gateway.app.core.dependencies import get_auth_messages
-from gateway.app.core.dto.user import CreateUserModel, UserModel
+from gateway.app.core.dependencies import get_auth_messages, get_current_user
+from gateway.app.core.dto.user import CreateUserModel, LoginUserModel, UserModel
 from gateway.app.core.services_messages.auth import AuthMessages
 
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
+@router.get("/current_user")
+async def get_current_user(
+    current_user: UserModel = Depends(get_current_user)
+) -> UserModel:
+    return current_user
+
+
 @router.post("/login")
-async def login():
-    return {"message": "Login"}
+async def login(
+    form: LoginUserModel,
+    auth_messages: Annotated[AuthMessages, Depends(get_auth_messages)],
+    response: Response
+) -> UserModel:
+    user, access_token, refresh_token = await auth_messages.login_user(form)
+    response.set_cookie("access_token", access_token, httponly=True)
+    response.set_cookie("refresh_token", refresh_token, httponly=True)
+    return user
 
 
 @router.post("/register")
@@ -20,7 +34,13 @@ async def register(
     auth_messages: Annotated[AuthMessages, Depends(get_auth_messages)],
     response: Response
 ) -> UserModel:
-    data = await auth_messages.register_user(form)
-    response.set_cookie(data["access_token"], "access_token")
-    response.set_cookie(data["refresh_token"], "refresh_token")
-    return UserModel(**data["user"])
+    user, access_token, refresh_token = await auth_messages.register_user(form)
+    response.set_cookie("access_token", access_token, httponly=True)
+    response.set_cookie("refresh_token", refresh_token, httponly=True)
+    return user
+
+
+@router.post("/logout")
+async def logout(response: Response):
+    response.delete_cookie("access_token")
+    response.delete_cookie("refresh_token")

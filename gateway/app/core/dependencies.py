@@ -12,21 +12,20 @@ async def get_broker(request: Request) -> RabbitBroker:
     return request.app.state.broker
 
 
-async def get_current_user(broker: RabbitBroker = Depends(get_broker)) -> dict:
-    correlation_id = str(uuid.uuid4())
-    user = await broker.send_message(
-        BrokerQueues.AUTH, 
-        correlation_id
-    )
-    if not user:
-        raise
-
-
 async def get_auth_messages(broker: RabbitBroker = Depends(get_broker)) -> AuthMessages:
     return AuthMessages(
         broker,
         await broker.channel.get_queue(BrokerQueues.GATEWAY)
     )
+
+
+async def get_current_user(
+    request: Request,
+    auth_messages: AuthMessages = Depends(get_auth_messages),
+) -> dict:
+    token = request.cookies.get('access_token')
+    return await auth_messages.get_current_user(token)
+    
 
 
 async def get_user_messages(broker: RabbitBroker = Depends(get_broker)) -> UserMessages:

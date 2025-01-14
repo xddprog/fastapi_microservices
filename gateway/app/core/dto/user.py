@@ -7,6 +7,12 @@ class CreateUserModel(BaseModel):
     password: str
 
 
+class LoginUserModel(BaseModel):
+    email: str
+    password: str
+
+
 class UserModel(BaseModel):
+    id: int
     username: str
     email: str

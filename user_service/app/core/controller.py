@@ -38,6 +38,8 @@ class UserController:
                         await self.service.get_all_users()
                     elif route == UserServiceRoutes.DELETE.value:
                         await self.service.delete_user(message)
+                    elif route == UserServiceRoutes.CHECK_USER_EXIST.value:
+                        await self.service.check_user_exist_by_email(message)
                 finally:
                     await session.close()
 

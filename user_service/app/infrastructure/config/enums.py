@@ -14,6 +14,7 @@ class UserServiceRoutes(str, Enum):
     GET = "get_user"
     UPDATE = "update_user"
     DELETE = "delete_user"
+    CHECK_USER_EXIST = "check_user_exist"
 
 
 class AuthServiceRoutes(str, Enum):

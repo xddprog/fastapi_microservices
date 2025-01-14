@@ -16,6 +16,14 @@ class AuthController:
             route = message.correlation_id.split("__")[0]
             if route == AuthServiceRoutes.REGISTER.value:
                 await self.service.register_user(message)
+            elif route == AuthServiceRoutes.LOGIN.value:
+                await self.service.login_user(message)
+            elif route == AuthServiceRoutes.GET_CURRENT_USER.value:
+                await self.service.get_current_user(message)
+            elif route == AuthServiceRoutes.REFRESH.value:
+                await self.service.logout_user(message)
+            elif route == AuthServiceRoutes.REFRESH.value:
+                await self.service.refresh_token(message)
 
     async def start(self):
         self.queue = await self.broker.declare_queue(BrokerQueues.AUTH)
