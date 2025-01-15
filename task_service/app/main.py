@@ -7,9 +7,12 @@ from core.controller import TaskController
 async def start_service():
     db_connection = await DatabaseConnection()()
     rabbit_client = await RabbitBroker()()
-    user_controller = TaskController(rabbit_client, db_connection)
-    await user_controller.start()
-
+    task_controller = TaskController(rabbit_client, db_connection)
+    try:
+        await task_controller.start()
+        await task_controller.consuming()
+    finally:
+        await task_controller.close()
 
 if __name__ == "__main__":
     asyncio.run(start_service())

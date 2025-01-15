@@ -16,3 +16,8 @@ class UserModel(BaseModel):
     id: int
     username: str
     email: str
+
+
+class UpdateUserModel(BaseModel):
+    username: str
+    email: str

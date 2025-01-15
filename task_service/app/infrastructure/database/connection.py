@@ -1,16 +1,15 @@
-from unittest.mock import Base
 from sqlalchemy import NullPool
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
-from infrastructure.config.config import DatabaseConfig
+from infrastructure.config.config import database_config
+from infrastructure.database.models import Base
 
 
 class DatabaseConnection:
-    def __init__(self, config: DatabaseConfig):
+    def __init__(self):
         self._engine = create_async_engine(
-            url=f"postgresql+asyncpg://{config.db_user}:{config.db_pass}"
-            f"@{config.db_host}:{config.db_port}/{config.db_name}",
-            poolclass=NullPool,
+            url=database_config.get_url(),
+            poolclass=NullPool
         )
 
     async def get_session(self) -> AsyncSession:

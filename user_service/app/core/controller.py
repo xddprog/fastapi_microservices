@@ -32,12 +32,6 @@ class UserController:
                         await self.service.create_user(message)
                     elif route == UserServiceRoutes.UPDATE.value:
                         await self.service.update_user(message)
-                    elif route == UserServiceRoutes.GET.value:
-                        await self.service.get_user(message)
-                    elif route == UserServiceRoutes.GET_ALL.value:
-                        await self.service.get_all_users()
-                    elif route == UserServiceRoutes.DELETE.value:
-                        await self.service.delete_user(message)
                     elif route == UserServiceRoutes.CHECK_USER_EXIST.value:
                         await self.service.check_user_exist_by_email(message)
                 finally:

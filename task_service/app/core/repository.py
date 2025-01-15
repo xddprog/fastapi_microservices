@@ -1,23 +1,24 @@
-from asyncio import Task
-from typing import Any, Self
+from typing import Any
 
 from sqlalchemy import Result, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import MappedColumn
+
+from infrastructure.database.models import Task
 
 
 class TaskRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
 
+    async def get_user_tasks(self, user_id: int) -> list[Task]:
+        query = select(Task).where(Task.user_id == user_id)
+        items: Result = await self.session.execute(query)
+        return items.scalars().all()
+
     async def get_item(self, item_id: int | str) -> Task | None:
         item = await self.session.get(Task, item_id)
         return item
-
-    async def get_all_items(self) -> list[Self]:
-        query = select(Task)
-        items: Result = await self.session.execute(query)
-        return items.scalars().all()
 
     async def get_by_attribute(
         self, attribute: MappedColumn[Any], value: str  | int
@@ -46,7 +47,6 @@ class TaskRepository:
             .returning(Task)
         )
 
-        item: Result = (await self.session.execute(query)).scalars().all()[0]
+        item: Result = (await self.session.execute(query)).scalar_one_or_none()
         await self.session.commit()
-        await self.session.refresh(item)
         return item

@@ -83,7 +83,6 @@ class AuthService:
         if not token:
             return InvalidToken
         try:
-            print(1)
             payload = decode(
                 token,
                 jwt_config.JWT_SECRET,

@@ -52,7 +52,6 @@ class UserService:
 
         user_exist = await self._get_user_by_email(user_data.get("email"))
         if user_exist:
-            print(message.correlation_id, "error")
             return await self.broker.send_message(
                 queue_name=BrokerQueues.AUTH,
                 message=json.dumps(UserAlreadyExistsError),
@@ -67,19 +66,13 @@ class UserService:
             correlation_id=message.correlation_id
         )
 
-    async def update_user(self, user_dto: UpdateUserModel):
+    async def update_user(self, message: aio_pika.IncomingMessage):
+        user_dto = json.loads(message.body.decode("utf-8"))
         updated_user = await self.repository.update_item(user_dto)
-        return UserModel.model_validate(updated_user, from_attributes=True)
+        updated_user = UserModel.model_validate(updated_user, from_attributes=True)
 
-    async def delete_user(self, user_id: int):
-        user = await self.repository.get_item(user_id)
-        await self.repository.delete_item(user)
-
-    async def get_user(self, user_id: int):
-        user = await self.repository.get_item(user_id)
-        return UserModel.model_validate(user, from_attributes=True)
-
-    async def get_all_tasks(self):
-        users = await self.repository.get_all_items()
-        return [UserModel.model_validate(user, from_attributes=True) for user in users]
-    
+        return await self.broker.send_message(
+            queue_name=BrokerQueues.AUTH,
+            message=json.dumps(updated_user.model_dump()),
+            correlation_id=message.correlation_id
+        )

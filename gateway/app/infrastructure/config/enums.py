@@ -20,3 +20,11 @@ class AuthServiceRoutes(str, Enum):
     REGISTER = "register"
     LOGIN = "login"
     GET_CURRENT_USER = "get_current_user"
+    
+
+class TaskServiceRoutes(str, Enum):
+    CREATE = "create_task"
+    GET_USER_TASKS = "get_user_tasks"
+    GET = "get_task"
+    UPDATE = "update_task"
+    DELETE = "delete_task"

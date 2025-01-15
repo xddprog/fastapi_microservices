@@ -8,6 +8,7 @@ class TaskStatus(str, Enum):
 
 
 class BrokerQueues(str, Enum):
+    GATEWAY = "gateway_queue"
     AUTH = "auth_queue"
     TASKS = "tasks_queue"
     USERS = "users_queue"
@@ -19,3 +20,11 @@ class UserServiceRoutes(str, Enum):
     GET = "get_user"
     UPDATE = "update_user"
     DELETE = "delete_user"
+
+
+class TaskServiceRoutes(str, Enum):
+    CREATE = "create_task"
+    GET_USER_TASKS = "get_user_tasks"
+    GET = "get_task"
+    UPDATE = "update_task"
+    DELETE = "delete_task"

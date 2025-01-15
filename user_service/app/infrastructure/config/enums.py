@@ -10,10 +10,8 @@ class BrokerQueues(str, Enum):
 
 class UserServiceRoutes(str, Enum):
     CREATE = "create_user"
-    GET_ALL = "get_all_users"
     GET = "get_user"
     UPDATE = "update_user"
-    DELETE = "delete_user"
     CHECK_USER_EXIST = "check_user_exist"
 
 
