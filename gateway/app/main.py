@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
-from gateway.app.routes import router
-from gateway.app.infrastructure.config.lifespan import lifespan
+from app.routes import router
+from app.infrastructure.config.lifespan import lifespan
 
 
 app = FastAPI(lifespan=lifespan)

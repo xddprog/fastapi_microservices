@@ -1,11 +1,11 @@
 import uuid
 from fastapi import Depends, Request
 
-from gateway.app.core.services_messages.auth import AuthMessages
-from gateway.app.core.services_messages.task import TaskMessages
-from gateway.app.core.services_messages.user import UserMessages
-from gateway.app.infrastructure.brokers.rabbit_broker import RabbitBroker
-from gateway.app.infrastructure.config.enums import BrokerQueues
+from app.core.services_messages.auth import AuthMessages
+from app.core.services_messages.task import TaskMessages
+from app.core.services_messages.user import UserMessages
+from app.infrastructure.brokers.rabbit_broker import RabbitBroker
+from app.infrastructure.config.enums import BrokerQueues
 
 
 async def get_broker(request: Request) -> RabbitBroker:

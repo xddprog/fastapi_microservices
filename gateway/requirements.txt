@@ -1,0 +1,8 @@
+fastapi
+sqlalchemy
+greenlet
+pydantic
+environs
+aio-pika
+asyncpg
+uvicorn

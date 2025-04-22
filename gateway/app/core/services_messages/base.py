@@ -3,9 +3,9 @@ import uuid
 
 from aio_pika.abc import AbstractQueue
 from fastapi import HTTPException
-from gateway.app.core.dto.user import CreateUserModel, LoginUserModel, UserModel
-from gateway.app.infrastructure.brokers.rabbit_broker import RabbitBroker
-from gateway.app.infrastructure.config.enums import AuthServiceRoutes, BrokerQueues
+from app.core.dto.user import CreateUserModel, LoginUserModel, UserModel
+from app.infrastructure.brokers.rabbit_broker import RabbitBroker
+from app.infrastructure.config.enums import AuthServiceRoutes, BrokerQueues
 
 
 class BaseMessages:

@@ -2,10 +2,10 @@ import json
 import uuid
 from aio_pika.abc import AbstractQueue
 from fastapi import HTTPException
-from gateway.app.core.services_messages.base import BaseMessages
-from gateway.app.infrastructure.brokers.rabbit_broker import RabbitBroker
-from gateway.app.infrastructure.config.enums import BrokerQueues, TaskServiceRoutes
-from gateway.app.core.dto.task import CreateTaskModel, TaskModel, UpdateTaskModel
+from app.core.services_messages.base import BaseMessages
+from app.infrastructure.brokers.rabbit_broker import RabbitBroker
+from app.infrastructure.config.enums import BrokerQueues, TaskServiceRoutes
+from app.core.dto.task import CreateTaskModel, TaskModel, UpdateTaskModel
 
 
 class TaskMessages(BaseMessages):    

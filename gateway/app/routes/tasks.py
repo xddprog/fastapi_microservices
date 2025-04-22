@@ -1,10 +1,10 @@
 from typing import Annotated
 from fastapi import APIRouter, Depends
 
-from gateway.app.core.dependencies import get_current_user, get_tasks_messages
-from gateway.app.core.dto.task import CreateTaskModel, TaskModel, UpdateTaskModel
-from gateway.app.core.dto.user import UserModel
-from gateway.app.core.services_messages.task import TaskMessages
+from app.core.dependencies import get_current_user, get_tasks_messages
+from app.core.dto.task import CreateTaskModel, TaskModel, UpdateTaskModel
+from app.core.dto.user import UserModel
+from app.core.services_messages.task import TaskMessages
 
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])

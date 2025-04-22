@@ -1,3 +1,4 @@
+import asyncio
 import aio_pika
 from sqlalchemy.testing.pickleable import User
 from infrastructure.database.connection import DatabaseConnection
@@ -17,10 +18,19 @@ class UserController:
         self.broker = rabbit_client
         self.db_connection = db_connection
 
+    async def get_handler(self, route: str):
+        handlers = {
+            UserServiceRoutes.CREATE.value: self.service.create_user,
+            UserServiceRoutes.UPDATE.value: self.service.update_user,
+            UserServiceRoutes.CHECK_USER_EXIST.value: self.service.check_user_exist_by_email,
+        }
+        return handlers.get(route)
+    
     async def on_message(self, message: aio_pika.IncomingMessage):
         async with message.process():
             route = message.correlation_id.split("__")[0]
-            if route:
+            handler = self.get_handler(route)
+            if handler:
                 try:
                     session = await self.db_connection.get_session()
                     self.service = UserService(
@@ -28,12 +38,9 @@ class UserController:
                         self.broker,
                         await self.broker.channel.get_queue(BrokerQueues.USERS)
                     )
-                    if route == UserServiceRoutes.CREATE.value:
-                        await self.service.create_user(message)
-                    elif route == UserServiceRoutes.UPDATE.value:
-                        await self.service.update_user(message)
-                    elif route == UserServiceRoutes.CHECK_USER_EXIST.value:
-                        await self.service.check_user_exist_by_email(message)
+                    await handler(message)
+                except Exception as e:
+                    print(e)
                 finally:
                     await session.close()
 
@@ -44,11 +51,6 @@ class UserController:
         await self.broker.close(BrokerQueues.USERS)
 
     async def consuming(self):
-        while True:
-            message = await self.get_message()
-            await self.on_message(message)
-
-    async def get_message(self):
-        async with self.queue.iterator() as users_queue:
-            async for message in users_queue:
-                return message
+        async with self.queue.iterator() as auth_queue:
+            async for message in auth_queue:
+                asyncio.create_task(self.on_message(message))

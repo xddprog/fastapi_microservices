@@ -3,7 +3,7 @@ from typing import Any
 import aio_pika
 from aio_pika.abc import AbstractQueue
 
-from gateway.app.infrastructure.config.config import rabbit_config
+from app.infrastructure.config.config import rabbit_config
 
 
 class RabbitBroker:
@@ -29,6 +29,7 @@ class RabbitBroker:
             ), 
             routing_key=queue_name,
         )
+        print("message sent", correlation_id)
 
     async def __call__(self) -> Any:
         self.connection = await aio_pika.connect_robust(

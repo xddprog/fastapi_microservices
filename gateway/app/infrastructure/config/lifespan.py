@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
-from gateway.app.infrastructure.brokers.rabbit_broker import RabbitBroker
-from gateway.app.infrastructure.config.enums import BrokerQueues
+from app.infrastructure.brokers.rabbit_broker import RabbitBroker
+from app.infrastructure.config.enums import BrokerQueues
 
 
 async def lifespan(app: FastAPI):

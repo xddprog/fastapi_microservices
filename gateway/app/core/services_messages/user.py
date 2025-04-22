@@ -2,9 +2,9 @@ import json
 import uuid
 from aio_pika.abc import AbstractQueue
 from fastapi import HTTPException
-from gateway.app.core.dto.user import UpdateUserModel, UserModel
-from gateway.app.infrastructure.brokers.rabbit_broker import RabbitBroker
-from gateway.app.infrastructure.config.enums import BrokerQueues, UserServiceRoutes
+from app.core.dto.user import UpdateUserModel, UserModel
+from app.infrastructure.brokers.rabbit_broker import RabbitBroker
+from app.infrastructure.config.enums import BrokerQueues, UserServiceRoutes
 
 
 class UserMessages:    
@@ -36,9 +36,11 @@ class UserMessages:
 
     async def update_user(self, user_id: int, user_dto: UpdateUserModel):
         correlation_id = str(uuid.uuid4())
+        user = user_dto.model_dump()
+        user.update({"user_id": user_id})
         await self.broker.send_message(
             queue_name=BrokerQueues.USERS,
-            message=json.dumps(user_dto.model_dump()),
+            message=json.dumps(user),
             correlation_id=f"{UserServiceRoutes.UPDATE.value}__{correlation_id}"
         )
 

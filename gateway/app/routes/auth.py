@@ -1,9 +1,9 @@
 from typing import Annotated
 from fastapi import APIRouter, Depends, Response
 
-from gateway.app.core.dependencies import get_auth_messages, get_current_user
-from gateway.app.core.dto.user import CreateUserModel, LoginUserModel, UserModel
-from gateway.app.core.services_messages.auth import AuthMessages
+from app.core.dependencies import get_auth_messages, get_current_user
+from app.core.dto.user import CreateUserModel, LoginUserModel, UserModel
+from app.core.services_messages.auth import AuthMessages
 
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -34,6 +34,7 @@ async def register(
     auth_messages: Annotated[AuthMessages, Depends(get_auth_messages)],
     response: Response
 ) -> UserModel:
+    print("register route")
     user, access_token, refresh_token = await auth_messages.register_user(form)
     response.set_cookie("access_token", access_token, httponly=True)
     response.set_cookie("refresh_token", refresh_token, httponly=True)

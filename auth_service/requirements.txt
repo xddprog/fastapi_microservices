@@ -1,0 +1,8 @@
+sqlalchemy
+greenlet
+pydantic
+environs
+aio-pika
+asyncpg
+pyjwt
+passlib

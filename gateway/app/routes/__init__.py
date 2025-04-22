@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
-from gateway.app.core.dependencies import get_current_user
-from gateway.app.routes.auth import router as auth_router
-from gateway.app.routes.tasks import router as tasks_router
-from gateway.app.routes.users import router as users_router
+from app.core.dependencies import get_current_user
+from app.routes.auth import router as auth_router
+from app.routes.tasks import router as tasks_router
+from app.routes.users import router as users_router
 
 
 router = APIRouter(prefix="/api")

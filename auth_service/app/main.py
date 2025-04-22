@@ -15,9 +15,11 @@ async def start_service():
         
         await auth_controller.start()
         await auth_controller.consuming()
+        print("start app")
+    except Exception as e:
+        print(e)
     finally:
         await auth_controller.close()
 
 
-if __name__ == "__main__":
-    asyncio.run(start_service())
+asyncio.run(start_service())

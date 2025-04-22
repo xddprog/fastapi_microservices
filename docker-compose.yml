@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  auth_service:
+    build:
+      context: ./auth_service
+    depends_on:
+      - rabbitmq
+      - postgres
+    environment:
+    - DB_HOST=postgres
+    - DB_NAME=postgres
+    - DB_PORT=5432
+    - DB_USER=postgres
+    - DB_PASS=postgres
+
+    - RABBIT_HOST=rabbitmq
+    - RABBIT_PORT=5672
+
+    networks:
+      - app
+
+  task_service:
+    build:
+      context: ./task_service
+    depends_on:
+      - rabbitmq
+      - postgres
+    environment:
+    - DB_HOST=postgres
+    - DB_NAME=postgres
+    - DB_PORT=5432
+    - DB_USER=postgres
+    - DB_PASS=postgres
+
+    - RABBIT_HOST=rabbitmq
+    - RABBIT_PORT=5672
+    networks:
+      - app
+    
+  user_service:
+    build:
+      context: ./user_service
+    depends_on:
+      - rabbitmq
+      - postgres
+    environment:
+    - DB_HOST=postgres
+    - DB_NAME=postgres
+    - DB_PORT=5432
+    - DB_USER=postgres
+    - DB_PASS=postgres
+
+    - RABBIT_HOST=rabbitmq
+    - RABBIT_PORT=5672
+    networks:
+      - app
+
+  gateway:
+    build:
+      context: ./gateway
+    depends_on:
+      - rabbitmq
+      - postgres
+    ports:
+      - "8000:8000"
+    environment:
+    - RABBIT_HOST=rabbitmq
+    - RABBIT_PORT=5672
+    networks:
+      - app
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - app
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5433:5432"
+    networks:
+      - app
+
+
+networks:
+  app:
+    driver: bridge
